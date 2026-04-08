@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mídia · Prefeitura de Campestre do Maranhão</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F3EF;
+  --surface: #FFFFFF;
+  --surface2: #EDEBE6;
+  --border: rgba(0,0,0,0.1);
+  --border2: rgba(0,0,0,0.18);
+  --text: #1A1816;
+  --text2: #6B6760;
+  --text3: #A39F98;
+  --accent: #1B4332;
+  --accent-light: #D8F3DC;
+  --accent-text: #1B4332;
+  --danger: #C0392B;
+  --danger-light: #FDECEA;
+  --warn: #856404;
+  --warn-light: #FFF3CD;
+  --info: #0D47A1;
+  --info-light: #E3F2FD;
+  --purple: #4A1F7C;
+  --purple-light: #EDE7F6;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; }
+
+.nav { background: var(--accent); padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 50; }
+.nav-brand { color: #fff; font-size: 15px; font-weight: 500; letter-spacing: -0.2px; }
+.nav-brand span { opacity: 0.55; font-weight: 300; }
+.nav-tabs { display: flex; gap: 4px; }
+.nav-tab { background: transparent; border: none; color: rgba(255,255,255,0.6); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 20px; cursor: pointer; transition: all 0.15s; }
+.nav-tab.active { background: rgba(255,255,255,0.18); color: #fff; }
+.nav-tab:hover:not(.active) { color: rgba(255,255,255,0.85); }
+
+.view { display: none; padding: 24px 20px; max-width: 780px; margin: 0 auto; }
+.view.active { display: block; }
+
+.section-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--text); margin-bottom: 4px; }
+.section-sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
+
+.form-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+.field { margin-bottom: 16px; }
+.field label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+.field input, .field select, .field textarea {
+  width: 100%; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text);
+  background: var(--bg); border: 0.5px solid var(--border2); border-radius: var(--radius-sm);
+  padding: 10px 12px; outline: none; transition: border-color 0.15s;
+}
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); background: #fff; }
+.field textarea { resize: vertical; min-height: 80px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media(max-width:480px) { .field-row { grid-template-columns: 1fr; } }
+
+.btn { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; padding: 10px 20px; border-radius: 24px; border: none; cursor: pointer; transition: all 0.15s; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #143829; }
+.btn-secondary { background: transparent; border: 0.5px solid var(--border2); color: var(--text2); }
+.btn-secondary:hover { background: var(--surface2); }
+.btn-danger { background: transparent; border: 0.5px solid #F5C6C3; color: var(--danger); font-size: 13px; padding: 7px 14px; }
+.btn-danger:hover { background: var(--danger-light); }
+.btn-sm { font-size: 12px; padding: 5px 12px; }
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+
+.badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.badge-solicitado { background: var(--surface2); color: var(--text2); }
+.badge-producao { background: var(--info-light); color: var(--info); }
+.badge-revisao { background: var(--purple-light); color: var(--purple); }
+.badge-aprovado { background: var(--warn-light); color: var(--warn); }
+.badge-postado { background: var(--accent-light); color: var(--accent-text); }
+.badge-atrasado { background: var(--danger-light); color: var(--danger); }
+
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px,1fr)); gap: 10px; margin-bottom: 20px; }
+.stat-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; }
+.stat-n { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text); line-height: 1; }
+.stat-l { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.stat-card.red .stat-n { color: var(--danger); }
+
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+.filters select, .filters input { font-family: 'DM Sans',sans-serif; font-size: 13px; color: var(--text); background: var(--surface); border: 0.5px solid var(--border2); border-radius: 20px; padding: 6px 12px; outline: none; }
+.filter-label { font-size: 12px; color: var(--text3); }
+
+.demand-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow); cursor: pointer; transition: border-color 0.15s; }
+.demand-card:hover { border-color: var(--border2); }
+.demand-card.late { border-left: 3px solid var(--danger); }
+.dc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.dc-title { font-size: 15px; font-weight: 500; color: var(--text); }
+.dc-meta { font-size: 12px; color: var(--text2); margin-top: 3px; }
+
+.pipeline { display: flex; align-items: center; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; }
+.pip-step { font-size: 11px; padding: 3px 10px; color: var(--text3); background: var(--surface2); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); border-right: 0.5px solid var(--border); white-space: nowrap; }
+.pip-step:first-child { border-left: 0.5px solid var(--border); border-radius: 20px 0 0 20px; }
+.pip-step:last-child { border-radius: 0 20px 20px 0; }
+.pip-step.done { background: var(--accent-light); color: var(--accent); }
+.pip-step.active { background: var(--info-light); color: var(--info); font-weight: 600; }
+
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; padding: 16px; overflow-y: auto; }
+.modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; padding-top: 40px; }
+.modal { background: var(--surface); border-radius: var(--radius); width: 100%; max-width: 540px; padding: 24px; position: relative; }
+.modal-close { position: absolute; top: 16px; right: 16px; background: var(--surface2); border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 16px; color: var(--text2); display: flex; align-items: center; justify-content: center; }
+.modal h2 { font-family: 'DM Serif Display', serif; font-size: 19px; margin-bottom: 16px; }
+.detail-row { display: flex; gap: 8px; margin-bottom: 8px; font-size: 13px; }
+.detail-lbl { color: var(--text2); min-width: 100px; flex-shrink: 0; }
+.detail-val { color: var(--text); }
+
+.step-selector { margin-top: 14px; }
+.step-selector-label { font-size: 12px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.step-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.step-btn { font-family: 'DM Sans',sans-serif; font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 0.5px solid var(--border2); background: transparent; cursor: pointer; color: var(--text2); transition: all 0.15s; }
+.step-btn:hover { background: var(--surface2); }
+.step-btn.active { background: var(--info-light); color: var(--info); border-color: #90CAF9; font-weight: 500; }
+
+.log-section { margin-top: 18px; border-top: 0.5px solid var(--border); padding-top: 14px; }
+.log-title { font-size: 12px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.log-item { display: flex; gap: 10px; margin-bottom: 8px; }
+.log-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border2); flex-shrink: 0; margin-top: 6px; }
+.log-dot.green { background: var(--accent); }
+.log-body { font-size: 13px; color: var(--text); }
+.log-time { font-size: 11px; color: var(--text3); }
+
+.toast { position: fixed; bottom: 24px; right: 20px; background: var(--accent); color: #fff; padding: 12px 18px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; z-index: 999; opacity: 0; transform: translateY(8px); transition: all 0.25s; pointer-events: none; max-width: 300px; }
+.toast.show { opacity: 1; transform: translateY(0); }
+
+.confirm-card { background: var(--accent-light); border: 0.5px solid #A8D5B5; border-radius: var(--radius); padding: 20px; margin-top: 16px; display: none; }
+.confirm-card.show { display: block; }
+.confirm-card h3 { font-size: 15px; font-weight: 500; color: var(--accent); margin-bottom: 4px; }
+.confirm-num { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--accent); display: block; margin-top: 8px; }
+
+.status-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; }
+.empty { text-align: center; padding: 40px 20px; color: var(--text2); font-size: 14px; }
+.empty-icon { font-size: 32px; margin-bottom: 8px; }
+.urgente-flag { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); display: inline-block; margin-right: 5px; }
+.assign-row { display: flex; gap: 8px; align-items: center; margin-top: 12px; flex-wrap: wrap; }
+.assign-row select { font-family: 'DM Sans',sans-serif; font-size: 13px; background: var(--bg); border: 0.5px solid var(--border2); border-radius: 20px; padding: 5px 10px; color: var(--text); outline: none; }
+
+/* CONFIG BANNER */
+.config-banner { background: #FFF8E1; border: 0.5px solid #FFE082; border-radius: var(--radius); padding: 16px 18px; margin-bottom: 20px; font-size: 13px; color: #5D4037; }
+.config-banner strong { color: #3E2723; }
+.config-banner a { color: var(--accent); }
+
+/* LOADING */
+.loading { display: flex; align-items: center; gap: 10px; padding: 20px; color: var(--text2); font-size: 13px; }
+.spinner { width: 18px; height: 18px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+::-webkit-scrollbar { width: 6px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+@media(max-width:500px) {
+  .nav-brand span { display: none; }
+  .view { padding: 16px 14px; }
+  .modal { padding: 18px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">Mídia <span>· Campestre do Maranhão</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showView('solicitar', this)">Solicitar</button>
+    <button class="nav-tab" onclick="showView('status', this)">Meu status</button>
+    <button class="nav-tab" onclick="showView('painel', this)">Painel</button>
+  </div>
+</nav>
+
+<!-- SOLICITAR -->
+<div id="view-solicitar" class="view active">
+  <div class="section-title">Nova solicitação</div>
+  <div class="section-sub">Preencha os campos e nossa equipe recebe na hora.</div>
+  <div id="banner-solicitar"></div>
+  <div class="form-card">
+    <div class="field">
+      <label>Secretaria</label>
+      <select id="s-sec">
+        <option value="">Selecionar secretaria</option>
+        <option>Saúde</option><option>Educação</option><option>Obras</option>
+        <option>Agricultura</option><option>Assistência Social</option>
+        <option>Gabinete do Prefeito</option><option>Cultura</option>
+        <option>Esporte e Lazer</option><option>Administração</option>
+        <option>Meio Ambiente</option><option>Finanças</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Seu nome</label>
+      <input type="text" id="s-nome" placeholder="Nome completo">
+    </div>
+    <div class="field">
+      <label>Descrição do conteúdo</label>
+      <textarea id="s-desc" placeholder="O que aconteceu? Qual o evento ou assunto? Quanto mais detalhe, melhor."></textarea>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Tipo de publicação</label>
+        <select id="s-tipo">
+          <option>Post no feed</option><option>Reels / vídeo</option><option>Story</option>
+          <option>Carrossel</option><option>Post + Reels</option><option>Vídeo longo</option>
+          <option>Não sei, decida vocês</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Prazo desejado</label>
+        <input type="date" id="s-prazo">
+      </div>
+    </div>
+    <div class="field">
+      <label>Urgente?</label>
+      <select id="s-urgente">
+        <option value="nao">Não, pode seguir o fluxo normal</option>
+        <option value="sim">Sim, é urgente</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Observações adicionais (opcional)</label>
+      <textarea id="s-obs" placeholder="Texto pronto? Foto específica? Conta para marcar?" style="min-height:60px"></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" id="btn-submit" onclick="submitDemand()">Enviar solicitação</button>
+    </div>
+  </div>
+  <div class="confirm-card" id="confirmCard">
+    <h3>Solicitação recebida!</h3>
+    <p>Guarde o número abaixo para acompanhar o andamento.</p>
+    <span class="confirm-num" id="confirmNum">#0000</span>
+    <p style="margin-top:8px;font-size:12px;color:var(--text2)">Para acompanhar, clique em "Meu status" e busque pelo número.</p>
+  </div>
+</div>
+
+<!-- STATUS PÚBLICO -->
+<div id="view-status" class="view">
+  <div class="section-title">Acompanhar solicitação</div>
+  <div class="section-sub">Digite o número da solicitação ou seu nome.</div>
+  <div id="banner-status"></div>
+  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+    <input type="text" id="track-query" placeholder="Número #1001 ou seu nome..." style="flex:1;min-width:160px;font-family:'DM Sans',sans-serif;font-size:14px;background:#fff;border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;outline:none;color:var(--text)">
+    <button class="btn btn-primary" onclick="trackSearch()">Buscar</button>
+  </div>
+  <div id="trackResults"></div>
+</div>
+
+<!-- PAINEL -->
+<div id="view-painel" class="view">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;flex-wrap:wrap;gap:8px">
+    <div class="section-title">Painel da equipe</div>
+    <div style="display:flex;align-items:center;gap:6px" id="pwd-row">
+      <input type="password" id="painel-pwd" placeholder="Senha" style="font-family:'DM Sans',sans-serif;font-size:13px;background:var(--surface);border:0.5px solid var(--border2);border-radius:20px;padding:5px 12px;width:120px;outline:none;color:var(--text)" onkeydown="if(event.key==='Enter')unlockPainel()">
+      <button class="btn btn-secondary btn-sm" onclick="unlockPainel()">Entrar</button>
+    </div>
+  </div>
+  <div class="section-sub">Acesso exclusivo para a equipe de comunicação.</div>
+  <div id="painel-locked" style="text-align:center;padding:40px 20px;color:var(--text2);font-size:14px">
+    <div style="font-size:36px;margin-bottom:12px">🔒</div>
+    <div>Digite a senha para acessar o painel completo.</div>
+    <div style="font-size:12px;color:var(--text3);margin-top:4px">Senha padrão: <strong>midia2025</strong></div>
+  </div>
+  <div id="painel-content" style="display:none">
+    <div id="banner-painel"></div>
+    <div class="stats-grid" id="painel-stats"></div>
+    <div class="filters">
+      <span class="filter-label">Filtrar:</span>
+      <select id="p-filter-status" onchange="renderPainel()">
+        <option value="">Todos</option>
+        <option>Solicitado</option><option>Em produção</option><option>Em revisão</option>
+        <option>Aprovado</option><option>Postado</option><option>Atrasado</option>
+      </select>
+      <select id="p-filter-sec" onchange="renderPainel()"><option value="">Todas as secretarias</option></select>
+      <input type="text" id="p-search" placeholder="Buscar..." oninput="renderPainel()" style="border-radius:20px">
+      <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text2);cursor:pointer">
+        <input type="checkbox" id="p-filter-urgente" onchange="renderPainel()"> Só urgentes
+      </label>
+      <button class="btn btn-secondary btn-sm" onclick="loadFromSheets(true)">↻ Atualizar</button>
+    </div>
+    <div id="painel-list"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalIfBg(event)">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2 id="m-title">Detalhes</h2>
+    <div id="m-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIGURAÇÃO ──────────────────────────────────────────────────────────────
+// PASSO FINAL: cole aqui a URL do seu Apps Script depois de publicar
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwfYpaLwzelnZov_041pcgqCynVnhc6k5SXrXhP2_sLFGbg5l2IloTDL9HKQS_ELnj-/exec';
+const PAINEL_PWD = 'midia2025'; // troque a senha aqui depois
+// ─────────────────────────────────────────────────────────────────────────────
+
+const STEPS = ['Solicitado','Em produção','Em revisão','Aprovado','Postado'];
+const RESPONSAVEIS = ['Não atribuído','João','Maria','Carlos','Ana','Pedro','Fernanda'];
+
+let demands = [];
+let panelUnlocked = false;
+let sheetsConfigured = SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbwfYpaLwzelnZov_041pcgqCynVnhc6k5SXrXhP2_sLFGbg5l2IloTDL9HKQS_ELnj-/exec';
+
+function isConfigured() { return sheetsConfigured; }
+
+function configBanner(target) {
+  if (isConfigured()) return '';
+  return `<div class="config-banner">
+    <strong>Google Sheets ainda não conectado.</strong> Os dados estão sendo salvos só neste navegador.
+    Siga o guia de configuração para conectar a planilha e compartilhar com toda a equipe.
+  </div>`;
+}
+
+// ── API ───────────────────────────────────────────────────────────────────────
+async function apiCall(action, payload = {}) {
+  if (!isConfigured()) return null;
+  try {
+    const url = SCRIPT_URL + '?action=' + action;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+    const json = await res.json();
+    return json;
+  } catch(e) {
+    console.error('Sheets API error:', e);
+    return null;
+  }
+}
+
+// ── LOCAL FALLBACK ────────────────────────────────────────────────────────────
+function localSave() {
+  localStorage.setItem('demands_prefeitura', JSON.stringify(demands));
+  localStorage.setItem('demands_nextid', String(nextId));
+}
+function localLoad() {
+  demands = JSON.parse(localStorage.getItem('demands_prefeitura') || '[]');
+  nextId = parseInt(localStorage.getItem('demands_nextid') || '1001');
+}
+
+let nextId = 1001;
+localLoad();
+
+// ── LOAD FROM SHEETS ─────────────────────────────────────────────────────────
+async function loadFromSheets(showSpinner) {
+  if (!isConfigured()) return;
+  if (showSpinner) {
+    document.getElementById('painel-list').innerHTML = '<div class="loading"><div class="spinner"></div>Carregando dados da planilha...</div>';
+  }
+  const res = await apiCall('getAll');
+  if (res && res.data) {
+    demands = res.data;
+    nextId = res.nextId || (demands.length ? Math.max(...demands.map(d=>d.id)) + 1 : 1001);
+    localSave();
+  }
+}
+
+// ── VIEWS ────────────────────────────────────────────────────────────────────
+function showView(v, tabEl) {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  tabEl.classList.add('active');
+  document.getElementById('banner-' + v) && (document.getElementById('banner-' + v).innerHTML = configBanner());
+  if (v === 'painel' && panelUnlocked) renderPainel();
+  if (v === 'status') document.getElementById('trackResults').innerHTML = '';
+}
+
+// ── SUBMIT ───────────────────────────────────────────────────────────────────
+async function submitDemand() {
+  const sec = document.getElementById('s-sec').value;
+  const nome = document.getElementById('s-nome').value.trim();
+  const desc = document.getElementById('s-desc').value.trim();
+  const tipo = document.getElementById('s-tipo').value;
+  const prazo = document.getElementById('s-prazo').value;
+  const urgente = document.getElementById('s-urgente').value === 'sim';
+  const obs = document.getElementById('s-obs').value.trim();
+  if (!sec || !nome || !desc) { toast('Preencha secretaria, nome e descrição.'); return; }
+
+  const btn = document.getElementById('btn-submit');
+  btn.textContent = 'Enviando...'; btn.disabled = true;
+
+  const id = nextId++;
+  const d = {
+    id, sec, nome, desc, tipo, prazo: prazo || '', urgente, obs,
+    step: 0, responsavel: 'Não atribuído', status: 'Solicitado',
+    log: [{ time: nowStr(), txt: 'Solicitação enviada por ' + nome, green: true }]
+  };
+  demands.unshift(d);
+  localSave();
+
+  if (isConfigured()) {
+    const res = await apiCall('add', d);
+    if (!res || !res.ok) toast('Aviso: falha ao salvar na planilha. Salvo localmente.');
+  }
+
+  document.getElementById('confirmNum').textContent = '#' + id;
+  document.getElementById('confirmCard').classList.add('show');
+  ['s-sec','s-nome','s-desc','s-prazo','s-obs'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('s-urgente').value = 'nao';
+  btn.textContent = 'Enviar solicitação'; btn.disabled = false;
+  toast('Solicitação #' + id + ' enviada!');
+}
+
+// ── TRACK ────────────────────────────────────────────────────────────────────
+async function trackSearch() {
+  const q = document.getElementById('track-query').value.trim().toLowerCase();
+  const el = document.getElementById('trackResults');
+  if (!q) { el.innerHTML = ''; return; }
+  if (isConfigured()) {
+    el.innerHTML = '<div class="loading"><div class="spinner"></div>Buscando...</div>';
+    await loadFromSheets(false);
+  }
+  const results = demands.filter(d =>
+    String(d.id).includes(q.replace('#','')) ||
+    d.nome.toLowerCase().includes(q) ||
+    d.sec.toLowerCase().includes(q)
+  );
+  if (!results.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div>Nenhuma solicitação encontrada.</div>'; return; }
+  el.innerHTML = results.map(d => {
+    const s = getComputedStatus(d);
+    const prazoFmt = d.prazo ? d.prazo.split('-').reverse().join('/') : 'sem prazo';
+    return `<div class="status-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">
+        <div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:2px">#${d.id} · ${d.sec}</div>
+          <div style="font-size:14px;font-weight:500">${d.desc.length>70?d.desc.slice(0,70)+'…':d.desc}</div>
+        </div>
+        <div>${badgeHtml(s)}${d.urgente?'<br><span class="badge badge-atrasado" style="font-size:10px;margin-top:4px">Urgente</span>':''}</div>
+      </div>
+      <div class="pipeline">${pipelineHtml(d.step)}</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:8px">Prazo: ${prazoFmt} · Responsável: ${d.responsavel}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── PAINEL ───────────────────────────────────────────────────────────────────
+function unlockPainel() {
+  const pwd = document.getElementById('painel-pwd').value;
+  if (pwd === PAINEL_PWD) {
+    panelUnlocked = true;
+    document.getElementById('painel-locked').style.display = 'none';
+    document.getElementById('painel-content').style.display = 'block';
+    document.getElementById('pwd-row').style.display = 'none';
+    document.getElementById('banner-painel').innerHTML = configBanner();
+    if (isConfigured()) loadFromSheets(true).then(() => renderPainel());
+    else renderPainel();
+    toast('Bem-vinda, equipe!');
+  } else { toast('Senha incorreta.'); }
+}
+
+function renderPainel() {
+  if (!panelUnlocked) return;
+  const fStatus = document.getElementById('p-filter-status').value;
+  const fSec = document.getElementById('p-filter-sec').value;
+  const fSearch = document.getElementById('p-search').value.toLowerCase();
+  const fUrgente = document.getElementById('p-filter-urgente').checked;
+
+  const counts = { total: demands.length, novos: 0, producao: 0, revisao: 0, atrasado: 0 };
+  demands.forEach(d => {
+    const s = getComputedStatus(d);
+    if (s==='Solicitado') counts.novos++;
+    if (s==='Em produção') counts.producao++;
+    if (s==='Em revisão') counts.revisao++;
+    if (s==='Atrasado') counts.atrasado++;
+  });
+  document.getElementById('painel-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-n">${counts.total}</div><div class="stat-l">Total</div></div>
+    <div class="stat-card"><div class="stat-n" style="color:var(--info)">${counts.novos}</div><div class="stat-l">Novos</div></div>
+    <div class="stat-card"><div class="stat-n" style="color:var(--purple)">${counts.producao}</div><div class="stat-l">Em produção</div></div>
+    <div class="stat-card"><div class="stat-n" style="color:var(--warn)">${counts.revisao}</div><div class="stat-l">Em revisão</div></div>
+    <div class="stat-card${counts.atrasado>0?' red':''}"><div class="stat-n">${counts.atrasado}</div><div class="stat-l">Atrasados</div></div>
+  `;
+
+  const secs = [...new Set(demands.map(d => d.sec))].sort();
+  const secSel = document.getElementById('p-filter-sec');
+  const curSec = secSel.value;
+  secSel.innerHTML = '<option value="">Todas as secretarias</option>' + secs.map(s => `<option${s===curSec?' selected':''}>${s}</option>`).join('');
+
+  let list = [...demands];
+  if (fStatus) list = list.filter(d => getComputedStatus(d) === fStatus);
+  if (fSec) list = list.filter(d => d.sec === fSec);
+  if (fSearch) list = list.filter(d => d.desc.toLowerCase().includes(fSearch) || d.nome.toLowerCase().includes(fSearch) || String(d.id).includes(fSearch));
+  if (fUrgente) list = list.filter(d => d.urgente);
+  list.sort((a,b) => {
+    const sa=getComputedStatus(a), sb=getComputedStatus(b);
+    if (sa==='Atrasado'&&sb!=='Atrasado') return -1;
+    if (sb==='Atrasado'&&sa!=='Atrasado') return 1;
+    if (a.urgente&&!b.urgente) return -1;
+    if (b.urgente&&!a.urgente) return 1;
+    return b.id-a.id;
+  });
+
+  const el = document.getElementById('painel-list');
+  if (!list.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">📭</div>Nenhuma demanda encontrada.</div>'; return; }
+  el.innerHTML = list.map(d => {
+    const s = getComputedStatus(d);
+    const prazoFmt = d.prazo ? d.prazo.split('-').reverse().join('/') : '—';
+    return `<div class="demand-card${s==='Atrasado'?' late':''}" onclick="openDetail(${d.id})">
+      <div class="dc-top">
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:3px">#${d.id} · ${d.sec} · ${d.tipo}</div>
+          <div class="dc-title">${d.urgente?'<span class="urgente-flag"></span>':''}${d.desc.length>80?d.desc.slice(0,80)+'…':d.desc}</div>
+          <div class="dc-meta">Por: ${d.nome} · Prazo: ${prazoFmt} · Responsável: ${d.responsavel}</div>
+        </div>
+        <div style="flex-shrink:0">${badgeHtml(s)}</div>
+      </div>
+      <div class="pipeline">${pipelineHtml(d.step)}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── DETAIL ───────────────────────────────────────────────────────────────────
+function openDetail(id) {
+  const d = demands.find(x => x.id === id);
+  if (!d) return;
+  document.getElementById('m-title').textContent = '#' + d.id + ' · ' + d.sec;
+  const s = getComputedStatus(d);
+  const prazoFmt = d.prazo ? d.prazo.split('-').reverse().join('/') : 'Sem prazo';
+  const stepBtns = STEPS.map((st,i) => `<button class="step-btn${i===d.step?' active':''}" onclick="setStep(${id},${i})">${st}</button>`).join('');
+  const respOpts = RESPONSAVEIS.map(r => `<option${r===d.responsavel?' selected':''}>${r}</option>`).join('');
+  const logItems = (d.log||[]).slice().reverse().map(l =>
+    `<div class="log-item"><div class="log-dot${l.green?' green':''}"></div><div><div class="log-body">${l.txt}</div><div class="log-time">${l.time}</div></div></div>`
+  ).join('');
+
+  document.getElementById('m-body').innerHTML = `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+      ${badgeHtml(s)}${d.urgente?'<span class="badge" style="background:#FFF3CD;color:#856404">Urgente</span>':''}
+    </div>
+    <div class="detail-row"><span class="detail-lbl">Solicitante</span><span class="detail-val">${d.nome}</span></div>
+    <div class="detail-row"><span class="detail-lbl">Tipo</span><span class="detail-val">${d.tipo}</span></div>
+    <div class="detail-row"><span class="detail-lbl">Prazo</span><span class="detail-val">${prazoFmt}</span></div>
+    <div class="detail-row"><span class="detail-lbl">Descrição</span><span class="detail-val">${d.desc}</span></div>
+    ${d.obs?`<div class="detail-row"><span class="detail-lbl">Obs</span><span class="detail-val">${d.obs}</span></div>`:''}
+    <div class="assign-row">
+      <span style="font-size:12px;color:var(--text2)">Responsável:</span>
+      <select onchange="assignResp(${id}, this.value)">${respOpts}</select>
+    </div>
+    <div class="step-selector">
+      <div class="step-selector-label">Etapa atual</div>
+      <div class="step-btns">${stepBtns}</div>
+    </div>
+    <div style="margin-top:14px">
+      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:5px">Adicionar nota ao histórico</label>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="note-input" placeholder="Ex: Rascunho enviado para aprovação..." style="flex:1;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:8px 10px;outline:none;color:var(--text)" onkeydown="if(event.key==='Enter')addNote(${id})">
+        <button class="btn btn-primary btn-sm" onclick="addNote(${id})">Salvar</button>
+      </div>
+    </div>
+    <div class="log-section">
+      <div class="log-title">Histórico</div>
+      <div>${logItems}</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:20px">
+      <button class="btn btn-danger" onclick="deleteDemand(${id})">Excluir</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Fechar</button>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+async function setStep(id, step) {
+  const d = demands.find(x => x.id === id);
+  if (!d || d.step === step) return;
+  d.log = d.log || [];
+  d.log.push({ time: nowStr(), txt: `Etapa: ${STEPS[d.step]} → ${STEPS[step]}`, green: step > d.step });
+  d.step = step;
+  localSave();
+  if (isConfigured()) await apiCall('update', { id, step, log: d.log });
+  openDetail(id);
+  renderPainel();
+}
+
+async function assignResp(id, resp) {
+  const d = demands.find(x => x.id === id);
+  if (!d || d.responsavel === resp) return;
+  d.log = d.log || [];
+  d.log.push({ time: nowStr(), txt: `Responsável: ${resp}` });
+  d.responsavel = resp;
+  localSave();
+  if (isConfigured()) await apiCall('update', { id, responsavel: resp, log: d.log });
+  renderPainel();
+  toast('Responsável atualizado.');
+}
+
+async function addNote(id) {
+  const inp = document.getElementById('note-input');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  const d = demands.find(x => x.id === id);
+  d.log = d.log || [];
+  d.log.push({ time: nowStr(), txt });
+  localSave();
+  if (isConfigured()) await apiCall('update', { id, log: d.log });
+  inp.value = '';
+  openDetail(id);
+}
+
+async function deleteDemand(id) {
+  if (!confirm('Excluir esta demanda?')) return;
+  demands = demands.filter(x => x.id !== id);
+  localSave();
+  if (isConfigured()) await apiCall('delete', { id });
+  closeModal();
+  renderPainel();
+  toast('Demanda excluída.');
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function getComputedStatus(d) {
+  if (d.step >= STEPS.length - 1) return 'Postado';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const prazo = new Date(d.prazo);
+  if (d.prazo && prazo < today) return 'Atrasado';
+  return STEPS[d.step];
+}
+function badgeHtml(s) {
+  const map = {'Solicitado':'badge-solicitado','Em produção':'badge-producao','Em revisão':'badge-revisao','Aprovado':'badge-aprovado','Postado':'badge-postado','Atrasado':'badge-atrasado'};
+  return `<span class="badge ${map[s]||'badge-solicitado'}">${s}</span>`;
+}
+function pipelineHtml(step) {
+  return STEPS.map((s,i) => `<span class="pip-step${i<step?' done':i===step?' active':''}">${s}</span>`).join('');
+}
+function nowStr() {
+  const d = new Date();
+  return `${pad(d.getDate())}/${pad(d.getMonth()+1)} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function pad(n) { return String(n).padStart(2,'0'); }
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+function closeModalIfBg(e) { if (e.target.id==='modalOverlay') closeModal(); }
+
+// init banner
+document.getElementById('banner-solicitar').innerHTML = configBanner();
+</script>
+</body>
+</html>
