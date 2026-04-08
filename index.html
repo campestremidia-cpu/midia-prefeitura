@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mídia · Prefeitura de Campestre do Maranhão</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1B4332">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mídia Campestre">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -361,7 +366,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   <div id="painel-locked" style="text-align:center;padding:40px 20px;color:var(--text2);font-size:14px">
     <div style="font-size:36px;margin-bottom:12px">🔒</div>
     <div>Digite a senha para acessar o painel.</div>
-    <div style="font-size:12px;color:var(--text3);margin-top:4px">Senha: <strong>midia2025</strong></div>
+    
   </div>
   <div id="painel-content" style="display:none">
     <div class="stats-grid" id="painel-stats"></div>
@@ -747,6 +752,13 @@ function toast(msg) {
 }
 function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
 function closeModalIfBg(e) { if (e.target.id==='modalOverlay') closeModal(); }
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
 </script>
 </body>
 </html>
