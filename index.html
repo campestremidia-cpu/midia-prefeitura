@@ -115,7 +115,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .pip-step.active { background: var(--info-light); color: var(--info); font-weight: 600; }
 
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; padding: 16px; overflow-y: auto; }
-.modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; padding-top: 40px; }
+.modal-overlay.open { display: flex; align-items: center; justify-content: center; padding: 20px; }
 .modal { background: var(--surface); border-radius: var(--radius); width: 100%; max-width: 540px; padding: 24px; position: relative; max-height: 85vh; overflow-y: auto; }
 .modal-close { position: absolute; top: 16px; right: 16px; background: var(--surface2); border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 16px; color: var(--text2); display: flex; align-items: center; justify-content: center; }
 .modal h2 { font-family: 'DM Serif Display', serif; font-size: 19px; margin-bottom: 16px; padding-right: 32px; }
@@ -366,7 +366,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   <div id="painel-locked" style="text-align:center;padding:40px 20px;color:var(--text2);font-size:14px">
     <div style="font-size:36px;margin-bottom:12px">🔒</div>
     <div>Digite a senha para acessar o painel.</div>
-    
+    <div style="font-size:12px;color:var(--text3);margin-top:4px">Senha: <strong>midia2025</strong></div>
   </div>
   <div id="painel-content" style="display:none">
     <div class="stats-grid" id="painel-stats"></div>
@@ -524,7 +524,7 @@ async function trackSearch() {
   if (!results.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div>Nenhuma solicitação encontrada.</div>'; return; }
   el.innerHTML = results.map(d => {
     const s = getComputedStatus(d);
-    const prazoFmt = d.prazo ? d.prazo.split('-').reverse().join('/') : 'sem prazo';
+    const prazoFmt = d.prazo ? formatDate(d.prazo) : 'sem prazo';
     const isEvento = d.tipoSolic === 'evento';
     return `<div class="status-card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">
@@ -603,7 +603,7 @@ function renderPainel() {
   el.innerHTML = list.map(d => {
     const s = getComputedStatus(d);
     const isEvento = d.tipoSolic === 'evento';
-    const prazoFmt = d.prazo ? d.prazo.split('-').reverse().join('/') : '—';
+    const prazoFmt = d.prazo ? formatDate(d.prazo) : '—';
     const horaStr = isEvento && d.hora ? ' · ' + d.hora : '';
     return `<div class="demand-card${s==='Atrasado'?' late':''}${isEvento?' evento-card':''}" onclick="openDetail(${d.id})">
       <div class="dc-top">
@@ -625,7 +625,7 @@ function openDetail(id) {
   const isEvento = d.tipoSolic === 'evento';
   document.getElementById('m-title').textContent = '#' + d.id + (isEvento ? ' · Evento' : ' · Post');
   const s = getComputedStatus(d);
-  const prazoFmt = d.prazo ? d.prazo.split('-').reverse().join('/') : 'Sem data';
+  const prazoFmt = d.prazo ? formatDate(d.prazo) : 'Sem data';
   const stepBtns = STEPS.map((st,i) => `<button class="step-btn${i===d.step?' active':''}" onclick="setStep(${id},${i})">${st}</button>`).join('');
   const respAtual = Array.isArray(d.responsavel) ? d.responsavel : (d.responsavel && d.responsavel !== 'Não atribuído' ? [d.responsavel] : []);
   const respChecks = RESPONSAVEIS.map(r => `<label><input type="checkbox" value="${r}" ${respAtual.includes(r)?'checked':''} onchange="assignResp(${id})"> ${r}</label>`).join('');
@@ -743,6 +743,20 @@ function pipelineHtml(step) {
 function nowStr() {
   const d = new Date();
   return `${pad(d.getDate())}/${pad(d.getMonth()+1)} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function formatDate(val) {
+  if (!val) return '—';
+  try {
+    // Handle ISO format like 2026-04-11T03:00:00.000Z
+    if (String(val).includes('T')) {
+      const d = new Date(val);
+      if (!isNaN(d.getTime())) return pad(d.getUTCDate())+'/'+pad(d.getUTCMonth()+1)+'/'+d.getUTCFullYear();
+    }
+    // Handle YYYY-MM-DD
+    const parts = String(val).split('-');
+    if (parts.length === 3) return parts[2]+'/'+parts[1]+'/'+parts[0];
+  } catch(e) {}
+  return String(val);
 }
 function pad(n) { return String(n).padStart(2,'0'); }
 function toast(msg) {
